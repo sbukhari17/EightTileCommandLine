@@ -7,10 +7,13 @@ import java.util.PriorityQueue;
 public class SearchTree {
     public PriorityQueue<Node> boardQueue;
     public HashSet<String> oldBoards;
+    Board bestBoardFound;
+    int bestBoardHeuristic;
     Node rootNode;
     public SearchTree(Node n){
         rootNode = new Node(n.board);
-
+        bestBoardFound = new Board(n.board);
+        bestBoardHeuristic = n.heuristic;
         boardQueue = new PriorityQueue<>();
         oldBoards = new HashSet<>();
 
@@ -20,6 +23,10 @@ public class SearchTree {
     public void addNode(Node n){
         String strSeq = convertBoardToStringSequence(n);
         if(!oldBoards.contains(strSeq)) {
+            if(n.heuristic < bestBoardHeuristic){
+                bestBoardFound = n.board;
+                bestBoardHeuristic = n.heuristic;
+            }
             boardQueue.offer(n);
             oldBoards.add(strSeq);
         }

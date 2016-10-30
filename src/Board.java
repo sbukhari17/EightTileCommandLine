@@ -191,13 +191,17 @@ public class Board {
             }
         }
         if(!isSolved()){
-            autoSolve(boardCounter);
+            SearchTree tree = autoSolve(boardCounter);
+            if(tree.bestBoardHeuristic > 0){
+                System.out.println("Best board found:");
+                tree.bestBoardFound.printBoard();
+            }
         }
-        printBoard();
+
         System.out.println("Done!");
     }
 
-    private void autoSolve(int currCtr){
+    private SearchTree autoSolve(int currCtr){
         System.out.println("Solving puzzle automatically..........................");
         Node v = new Node(this);
 
@@ -219,6 +223,7 @@ public class Board {
                 tree.rootNode.nextNode.get(tree.rootNode.nextNode.size() - 1).board.printBoard();
             }
         }
+        return tree;
     }
 
     private static Coordinate getIntendedCoordinate(int n){

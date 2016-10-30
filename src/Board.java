@@ -214,7 +214,7 @@ public class Board {
                 unsolvable = true;
             }else {
                 v = nextMove;
-                tree.Empty();
+                //tree.Empty();
                 System.out.println(currCtr++ + ". ");
                 tree.rootNode.nextNode.get(tree.rootNode.nextNode.size() - 1).board.printBoard();
             }

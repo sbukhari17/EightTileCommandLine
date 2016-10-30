@@ -193,24 +193,33 @@ public class Board {
         if(!isSolved()){
             SearchTree tree = autoSolve(boardCounter);
             if(tree.bestBoardHeuristic > 0){
-                System.out.println("Best board found:");
+                System.out.println("That puzzle is impossible to solve. Best board found:");
                 tree.bestBoardFound.printBoard();
+                System.out.println("Heuristic value:" + tree.bestBoardHeuristic);
+
+            }
+            else {
+                ArrayList<Board> list = tree.createPath();
+                for (int i = 0; i < list.size()-1; i++) {
+                    System.out.println(i+1 + ".");
+                    list.get(i).printBoard();
+                }
             }
         }
 
-        System.out.println("Done!");
+        System.out.println("Done");
     }
 
     private SearchTree autoSolve(int currCtr){
         System.out.println("Solving puzzle automatically..........................");
-        Node v = new Node(this);
+        Node v = new Node(null, this);
 
         SearchTree tree = new SearchTree(v);
         boolean unsolvable = false;
         while(!v.board.isSolved() && !unsolvable){
             ArrayList<Board> children = v.board.getChildren();
             for(Board b: children){
-                tree.addNode(new Node(b));
+                tree.addNode(new Node(v.board,b));
             }
             Node nextMove = tree.pop();
             if(nextMove == null){
@@ -219,8 +228,8 @@ public class Board {
             }else {
                 v = nextMove;
                 //tree.Empty();
-                System.out.println(currCtr++ + ". ");
-                tree.rootNode.nextNode.get(tree.rootNode.nextNode.size() - 1).board.printBoard();
+                //System.out.println(currCtr++ + ". ");
+                //tree.rootNode.nextNode.get(tree.rootNode.nextNode.size() - 1).board.printBoard();
             }
         }
         return tree;

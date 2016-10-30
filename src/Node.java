@@ -7,17 +7,13 @@ import java.util.ArrayList;
 public class Node implements Comparable{
     Board board;
     int heuristic;
+    Board previousBoard;
     ArrayList<Node> nextNode;
 
-    Node(Board b){
+    Node(Board a, Board b){
+        previousBoard = a;
         board = new Board(b);
         heuristic = board.currentHeuristic();
-    }
-
-    public void addPathNode(Node n){
-        if(nextNode == null)
-            nextNode = new ArrayList<>();
-        nextNode.add(n);
     }
 
     @Override

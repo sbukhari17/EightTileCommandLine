@@ -214,11 +214,11 @@ public class Board {
                 unsolvable = true;
             }else {
                 v = nextMove;
+                tree.Empty();
                 System.out.println(currCtr++ + ". ");
                 tree.rootNode.nextNode.get(tree.rootNode.nextNode.size() - 1).board.printBoard();
             }
         }
-        tree.rootNode.nextNode.get(tree.rootNode.nextNode.size()).board.printBoard();
     }
 
     private static Coordinate getIntendedCoordinate(int n){

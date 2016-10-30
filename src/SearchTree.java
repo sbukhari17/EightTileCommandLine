@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
  */
 public class SearchTree {
     public PriorityQueue<Node> boardQueue;
-    public HashSet<Node> oldBoards;
+    public HashSet<String> oldBoards;
     Node rootNode;
     public SearchTree(Node n){
         rootNode = new Node(n.board);
@@ -14,13 +14,14 @@ public class SearchTree {
         boardQueue = new PriorityQueue<>();
         oldBoards = new HashSet<>();
 
-        oldBoards.add(rootNode);
+        oldBoards.add(convertBoardToStringSequence(n));
     }
 
     public void addNode(Node n){
-        if(!oldBoards.contains(n)) {
+        String strSeq = convertBoardToStringSequence(n);
+        if(!oldBoards.contains(strSeq)) {
             boardQueue.offer(n);
-            oldBoards.add(n);
+            oldBoards.add(strSeq);
         }
     }
     public Node pop(){
@@ -28,6 +29,16 @@ public class SearchTree {
         if(ret != null)
             rootNode.addPathNode(ret);
         return ret;
+    }
+    public String convertBoardToStringSequence(Node n){
+        Board b = n.board;
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i< Constants.dimX; i++){
+            for(int j =0 ; j< Constants.dimY; j++){
+                sb.append(b.grid[i][j]);
+            }
+        }
+        return sb.toString();
     }
     public void Empty(){
         boardQueue.clear();

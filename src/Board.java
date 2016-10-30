@@ -229,7 +229,7 @@ public class Board {
         if (!isSolved()) {
             SearchTree tree = autoSolve();
             if (tree.bestBoardHeuristic > 0) {
-                Constants.outputStream.println("\nAll 181442 moves have been tried.");
+                Constants.outputStream.println("\nAll " +tree.oldBoards.size() + " moves have been tried.");
                 Constants.outputStream.println("That puzzle is impossible to solve. Best board found:");
                 tree.bestBoardFound.printBoard();
                 Constants.outputStream.println("Heuristic value: " + tree.bestBoardHeuristic);

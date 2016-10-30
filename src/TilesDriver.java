@@ -1,9 +1,11 @@
+/**
+ * Driver class that gets user input, creates a board, and runs that board's interactive loop.
+ * Created by 1530B
+ */
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-/**
- * Created by syedb on 10/17/2016.
- */
 public class TilesDriver {
     public static void main(String[] args) {
         try {
@@ -14,8 +16,15 @@ public class TilesDriver {
         }
     }
 
+    /**
+     * Get user input for a starting configuration (0/1)
+     * @return int
+     */
     public static int getUserInput() {
         Scanner scan = new Scanner(Constants.inputStream);
+        Constants.outputStream.println("Author: 1530B");
+        Constants.outputStream.println("Class: CS 342, Fall 2016");
+        Constants.outputStream.println("Program: #3, 8 Tiles.\n");
         Constants.outputStream.println("Welcome to the 8-tiles puzzle.");
         Constants.outputStream.println("Place the tiles in ascending numerical order. For each");
         Constants.outputStream.println("move enter the piece to be moved into the blank square,");

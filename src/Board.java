@@ -3,6 +3,7 @@
  *  if the board is solvable, prints out a step-by-step solution
  *  if the board is unsolvable, prints out a best-found solution
  *
+ * created by 1530b
  */
 
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class Board {
 
     }
 
+    /**
+     * Performs a deep copy of a board by copying its grid and mappings.
+     * @param b
+     */
     public Board(Board b) {
         grid = new int[Constants.dimX][Constants.dimY];
         for (int i = 0; i < Constants.dimX; i++) {
@@ -37,7 +42,11 @@ public class Board {
         }
     }
 
-
+    /**
+     * compares the grid of this to board b for equality
+     * @param b
+     * @return
+     */
     public boolean equals(Board b) {
         for (int i = 0; i < Constants.dimX; i++) {
             if (!grid[i].equals(b.grid[i])) {

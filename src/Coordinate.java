@@ -1,5 +1,5 @@
 /**
- * Created by syedb on 10/30/2016.
+ * Used to hold coordinates for grid indexes
  */
 public class Coordinate {
     int X;

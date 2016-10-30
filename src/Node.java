@@ -1,14 +1,11 @@
-import java.util.ArrayList;
-
-
 /**
- * Created by syedb on 10/17/2016.
+ * A node containing a board and its heuristic as well as the predecessor board leading to it. previousBoard will always be null for a root node.
+ * Created by 1530B
  */
 public class Node implements Comparable {
     Board board;
     int heuristic;
     Board previousBoard;
-    ArrayList<Node> nextNode;
 
     Node(Board a, Board b) {
         previousBoard = a;
@@ -16,6 +13,11 @@ public class Node implements Comparable {
         heuristic = board.currentHeuristic();
     }
 
+    /**
+     * Comparator function for Node. Since boards of different orientations can have the same heuristic, calls the board's equality function instead.
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Object o) {
         Node n = (Node) o;

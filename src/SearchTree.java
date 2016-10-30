@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 
 /**
  * Created by syedb on 10/17/2016.
@@ -10,7 +13,8 @@ public class SearchTree {
     Board bestBoardFound;
     int bestBoardHeuristic;
     Node rootNode;
-    public SearchTree(Node n){
+
+    public SearchTree(Node n) {
         rootNode = new Node(null, n.board);
         bestBoardFound = new Board(n.board);
         bestBoardHeuristic = n.heuristic;
@@ -21,10 +25,10 @@ public class SearchTree {
         oldBoards.put(convertBoardToStringSequence(n.board), n);
     }
 
-    public void addNode(Node n){
+    public void addNode(Node n) {
         String strSeq = convertBoardToStringSequence(n.board);
-        if(!oldBoards.containsKey(strSeq)) {
-            if(n.heuristic < bestBoardHeuristic){
+        if (!oldBoards.containsKey(strSeq)) {
+            if (n.heuristic < bestBoardHeuristic) {
                 bestBoardFound = n.board;
                 bestBoardHeuristic = n.heuristic;
             }
@@ -32,28 +36,31 @@ public class SearchTree {
             oldBoards.put(strSeq, n);
         }
     }
-    public Node pop(){
+
+    public Node pop() {
         Node ret = boardQueue.poll();
         return ret;
     }
-    public String convertBoardToStringSequence(Board b){
+
+    public String convertBoardToStringSequence(Board b) {
         StringBuilder sb = new StringBuilder();
-        for(int i=0; i< Constants.dimX; i++){
-            for(int j =0 ; j< Constants.dimY; j++){
+        for (int i = 0; i < Constants.dimX; i++) {
+            for (int j = 0; j < Constants.dimY; j++) {
                 sb.append(b.grid[i][j]);
             }
         }
         return sb.toString();
     }
 
-    public ArrayList<Board> createPath(){
+    public ArrayList<Board> createPath() {
         ArrayList<Board> path = new ArrayList<>();
-        pathHelper(oldBoards.get(convertBoardToStringSequence(bestBoardFound)),path);
+        pathHelper(oldBoards.get(convertBoardToStringSequence(bestBoardFound)), path);
         Collections.reverse(path);
         return path;
     }
-    public void pathHelper(Node n, ArrayList<Board> path){
-        if(n.previousBoard == null){
+
+    public void pathHelper(Node n, ArrayList<Board> path) {
+        if (n.previousBoard == null) {
             return;
         }
         path.add(n.board);

@@ -1,41 +1,46 @@
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+/** Board.java
+ *  Creates a board based on user input and runs an interactive loop to either allow the user to solve the board or to automatically solve it
+ *  if the board is solvable, prints out a step-by-step solution
+ *  if the board is unsolvable, prints out a best-found solution
+ *
+ */
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Scanner;
 import static java.lang.System.exit;
 
-/**
- * Created by syedb on 10/17/2016.
- */
 public class Board {
-    public int grid [][];
+    public int grid[][];
     HashMap<Integer, Coordinate> mapFromIntegerToCoord = new HashMap<>();
 
     public Board(int choice) {
-        if(choice == 1){
+        if (choice == 1) {
             generateBoard(new Random(System.currentTimeMillis()));
-        } else if(choice == 2){
+        } else if (choice == 2) {
             generateBoard();
         } else {
-            Constants.printStream.println("Invalid input given.");
+            Constants.outputStream.println("Invalid input given.");
             exit(1);
         }
 
     }
-    public Board(Board b){
-        grid= new int[Constants.dimX][Constants.dimY];
-        for(int i=0; i< Constants.dimX; i++){
-            for(int j=0; j< Constants.dimY; j++){
-                grid[i][j]= b.grid[i][j];
-                mapFromIntegerToCoord.put(b.grid[i][j],new Coordinate(i,j));
+
+    public Board(Board b) {
+        grid = new int[Constants.dimX][Constants.dimY];
+        for (int i = 0; i < Constants.dimX; i++) {
+            for (int j = 0; j < Constants.dimY; j++) {
+                grid[i][j] = b.grid[i][j];
+                mapFromIntegerToCoord.put(b.grid[i][j], new Coordinate(i, j));
             }
         }
     }
 
 
-    public boolean equals(Board b){
-        for(int i=0; i< Constants.dimX; i++){
-            if(!grid[i].equals(b.grid[i])){
+    public boolean equals(Board b) {
+        for (int i = 0; i < Constants.dimX; i++) {
+            if (!grid[i].equals(b.grid[i])) {
                 return false;
             }
         }
@@ -48,20 +53,21 @@ public class Board {
      * 2. export them into an array
      * 3. convert into an integer array
      * 4. set up grid
+     *
      * @param rand
      */
-    private void generateBoard(Random rand){
+    private void generateBoard(Random rand) {
         grid = new int[Constants.dimX][Constants.dimY];
-        int [] boardVals = new int[Constants.dimX * Constants.dimY];
-        for(int i=0; i< (Constants.dimX* Constants.dimY); i++){
-            boardVals[i]= i;
+        int[] boardVals = new int[Constants.gridSize];
+        for (int i = 0; i < (Constants.gridSize); i++) {
+            boardVals[i] = i;
         }
         shuffleNumbers(boardVals, rand);
         int arrIndex = 0;
-        for(int i=0; i< Constants.dimX; i++){
-            for(int j=0; j< Constants.dimY; j++){
+        for (int i = 0; i < Constants.dimX; i++) {
+            for (int j = 0; j < Constants.dimY; j++) {
                 int num = boardVals[arrIndex++];
-                mapFromIntegerToCoord.put(num, new Coordinate(i,j));
+                mapFromIntegerToCoord.put(num, new Coordinate(i, j));
                 grid[i][j] = num;
             }
         }
@@ -73,59 +79,77 @@ public class Board {
      * 2. parse char by char
      * 3. input into grid
      */
-    private void generateBoard(){
-        Scanner scan= new Scanner(System.in);
-        System.out.println("Some boards such as 728045163 are impossible.");
-        System.out.println("Others such as 245386107 are possible.");
-        System.out.print("Enter a string of 6 digits (including 0) for the board --> ");
-        String input= scan.nextLine().trim();
+    private void generateBoard() {
+        Scanner scan = new Scanner(Constants.inputStream);
+        Constants.outputStream.println("Some boards such as 728045163 are impossible.");
+        Constants.outputStream.println("Others such as 245386107 are possible.");
+        Constants.outputStream.print("Enter a string of 6 digits (including 0) for the board --> ");
+        String input = scan.nextLine().trim();
         grid = new int[Constants.dimX][Constants.dimY];
         int strIndex = 0;
 
-        for(int i=0;i < Constants.dimX; i++){
-            for(int j=0; j< Constants.dimY; j++){
+        for (int i = 0; i < Constants.dimX; i++) {
+            for (int j = 0; j < Constants.dimY; j++) {
                 int num = Character.getNumericValue(input.charAt(strIndex++));
-                mapFromIntegerToCoord.put(num, new Coordinate(i,j));
+                mapFromIntegerToCoord.put(num, new Coordinate(i, j));
                 grid[i][j] = num;
             }
         }
     }
-    private void shuffleNumbers(int [] arr, Random rand){
-        int numTimesToSwap = rand.nextInt(50);
-        for(int i=0; i< numTimesToSwap; i++){
-            int index1= rand.nextInt((Constants.dimX*Constants.dimY) -1);
-            int index2 = rand.nextInt((Constants.dimX*Constants.dimY) -1);
-            int tmp= arr[index2];
+
+    /**
+     * Takes an array and shuffles it a random number of times
+     * @param arr
+     * @param rand
+     */
+    private void shuffleNumbers(int[] arr, Random rand) {
+        int numTimesToSwap = rand.nextInt(200);
+        for (int i = 0; i < numTimesToSwap; i++) {
+            int index1 = rand.nextInt((Constants.gridSize) - 1);
+            int index2 = rand.nextInt((Constants.gridSize) - 1);
+            int tmp = arr[index2];
             arr[index2] = arr[index1];
-            arr[index1]=tmp;
-        }
-    }
-    public void printBoard(){
-        for(int i=0; i< Constants.dimX; i++){
-            System.out.print("  ");
-            for(int j=0; j< Constants.dimY; j++){
-                System.out.print(grid[i][j] == 0 ? "  " : grid[i][j] + " ");
-            }
-            System.out.print("\n");
+            arr[index1] = tmp;
         }
     }
 
+    /**
+     * prints out the current grid
+     */
+    public void printBoard() {
+        for (int i = 0; i < Constants.dimX; i++) {
+            Constants.outputStream.print("  ");
+            for (int j = 0; j < Constants.dimY; j++) {
+                Constants.outputStream.print(grid[i][j] == 0 ? "  " : grid[i][j] + " ");
+            }
+            Constants.outputStream.print("\n");
+        }
+    }
+
+    /**
+     * determines whether the current grid is already solved
+     * @return
+     */
     public boolean isSolved() {
         for (int i = 0; i < Constants.dimX; i++) {
             for (int j = 0; j < Constants.dimY; j++) {
-                if (i == Constants.dimX - 1 && j == Constants.dimY - 1) {
-                    if(grid[i][j] != 0) {
-                      return false;
-                  }
-                }
-                else if (grid[i][j] != (i * Constants.dimX) + j + 1) //every other index should satisfy its spot
+                if (i == Constants.dimX - 1 && j == Constants.dimY - 1) { //if at bottom right corner, index should be 0
+                    if (grid[i][j] != 0) {
+                        return false;
+                    }
+                } else if (grid[i][j] != (i * Constants.dimX) + j + 1) //every other index should satisfy its spot
                     return false;
             }
         }
         return true;
     }
-    public void makeMove(int n){
-        if(mapFromIntegerToCoord.containsKey(n)){
+
+    /**
+     * slides a piece into the empty slot
+     * @param n
+     */
+    public void makeMove(int n) {
+        if (mapFromIntegerToCoord.containsKey(n)) {
             Coordinate coord = mapFromIntegerToCoord.remove(n);
             Coordinate zeroCoord = mapFromIntegerToCoord.remove(0);
             grid[zeroCoord.X][zeroCoord.Y] = grid[coord.X][coord.Y];
@@ -133,13 +157,17 @@ public class Board {
             mapFromIntegerToCoord.put(0, new Coordinate(coord.X, coord.Y));
             mapFromIntegerToCoord.put(n, new Coordinate(zeroCoord.X, zeroCoord.Y));
 
-        } else{
-            //invalid number entered
         }
     }
-    public boolean isValidMove(int n){
+
+    /**
+     * determines whether a given move is valid
+     * @param n
+     * @return
+     */
+    public boolean isValidMove(int n) {
         Coordinate coord = mapFromIntegerToCoord.get(n);
-        if(mapFromIntegerToCoord.containsKey(n)) {
+        if (mapFromIntegerToCoord.containsKey(n)) {
             if (coord.X + 1 <= Constants.dimX - 1) {
                 if (grid[coord.X + 1][coord.Y] == 0) {
                     return true;
@@ -164,158 +192,161 @@ public class Board {
         return false;
     }
 
-    public void interactiveLoop(){
-        Scanner scan = new Scanner(System.in);
+    /**
+     *  while the board is unsolved, allows the user to:
+     *      a. make a move (if it is valid)
+     *      b. prompt for an automatic solution (if one exists, otherwise print the best board found)
+     *      c. quit
+     *
+     */
+    public void interactiveLoop() {
+        Scanner scan = new Scanner(Constants.inputStream);
         int boardCounter = 1;
-        System.out.println("Initial board is:");
+        Constants.outputStream.println("Initial board is:");
         boolean autoSolve = false;
-        while(!isSolved() && !autoSolve) {
-            System.out.println(boardCounter++ + ".");
+        while (!isSolved() && !autoSolve) {
+            Constants.outputStream.println(boardCounter++ + ".");
             printBoard();
-            System.out.println("Heuristic Value: " + currentHeuristic());
-            System.out.print("\nPiece to move: ");
+            Constants.outputStream.println("Heuristic Value: " + currentHeuristic());
+            Constants.outputStream.print("\nPiece to move: ");
             String move = scan.next();
             char m = move.charAt(0);
             if (m == 's') {
                 autoSolve = true;
             } else {
                 int numericInput = Character.getNumericValue(m);
-                if(numericInput == 0){
+                if (numericInput == 0) {
+                    Constants.outputStream.println("\nExiting program.");
                     exit(0);
                 }
                 if (isValidMove(numericInput)) {
                     makeMove(numericInput);
                 } else {
-                    System.out.println("Invalid Move entered.");
+                    Constants.outputStream.println("*** Invalid move.   Please retry.");
                 }
             }
         }
-        if(!isSolved()){
-            SearchTree tree = autoSolve(boardCounter);
-            if(tree.bestBoardHeuristic > 0){
-                System.out.println("That puzzle is impossible to solve. Best board found:");
+        if (!isSolved()) {
+            SearchTree tree = autoSolve();
+            if (tree.bestBoardHeuristic > 0) {
+                Constants.outputStream.println("\nAll 181442 moves have been tried.");
+                Constants.outputStream.println("That puzzle is impossible to solve. Best board found:");
                 tree.bestBoardFound.printBoard();
-                System.out.println("Heuristic value:" + tree.bestBoardHeuristic);
-
-            }
-            else {
+                Constants.outputStream.println("Heuristic value: " + tree.bestBoardHeuristic);
+                Constants.outputStream.println("\nExiting program.");
+            } else {
+                Constants.outputStream.println("1.");
+                printBoard();
                 ArrayList<Board> list = tree.createPath();
-                for (int i = 0; i < list.size()-1; i++) {
-                    System.out.println(i+1 + ".");
+
+                for (int i = 0; i < list.size(); i++) {
+                    Constants.outputStream.println(i + 2 + ".");
                     list.get(i).printBoard();
                 }
+                Constants.outputStream.println("\nDone");
             }
         }
 
-        System.out.println("Done");
     }
 
-    private SearchTree autoSolve(int currCtr){
-        System.out.println("Solving puzzle automatically..........................");
+    /**
+     * attempts to solve the board by:
+     *  repeatedly making the best move possible by using a calculated heuristic at each step
+     * @return SearchTree
+     */
+    private SearchTree autoSolve() {
+        Constants.outputStream.println("Solving puzzle automatically..........................");
         Node v = new Node(null, this);
-
         SearchTree tree = new SearchTree(v);
         boolean unsolvable = false;
-        while(!v.board.isSolved() && !unsolvable){
+        while (!v.board.isSolved() && !unsolvable) {
             ArrayList<Board> children = v.board.getChildren();
-            for(Board b: children){
-                tree.addNode(new Node(v.board,b));
+            for (Board b : children) {
+                tree.addNode(new Node(v.board, b));
             }
             Node nextMove = tree.pop();
-            if(nextMove == null){
-                //unsolvable
+            if (nextMove == null) {
                 unsolvable = true;
-            }else {
+            } else {
                 v = nextMove;
-                //tree.Empty();
-                //System.out.println(currCtr++ + ". ");
-                //tree.rootNode.nextNode.get(tree.rootNode.nextNode.size() - 1).board.printBoard();
             }
         }
         return tree;
     }
 
-    private static Coordinate getIntendedCoordinate(int n){
-        int intX = (n-1)/Constants.dimX;
-        int intY = (n-1)%Constants.dimY;
-        return new Coordinate(intX,intY);
+    /**
+     * Calculates the intended coordinate of a given integer.
+     *  ex:
+     *      1's intended coordinate in a 3x3 grid is (0,0)
+     *      2's intended coordinate in a 3x3 grid is (0,1)
+     *      8's intended coordinate in a 3x3 grid is (2,1)
+     * @param n
+     * @return a coordinate with the intended position of n
+     */
+    private static Coordinate getIntendedCoordinate(int n) {
+        int intX = (n - 1) / Constants.dimX;
+        int intY = (n - 1) % Constants.dimY;
+        return new Coordinate(intX, intY);
     }
 
-    private int movesFromIntendedSlot(int n){
+    /**
+     * calculates the number of moves required to get a given number into it's intended location
+     * @param n
+     * @return
+     */
+    private int movesFromIntendedSlot(int n) {
         Coordinate currCoordinate = mapFromIntegerToCoord.get(n);
-        if(n == 0){
-            return Math.abs((Constants.dimX -1) - currCoordinate.X) + Math.abs((Constants.dimY -1) - currCoordinate.Y);
-        }
-        else {
+        if (n == 0) {
+            return Math.abs((Constants.dimX - 1) - currCoordinate.X) + Math.abs((Constants.dimY - 1) - currCoordinate.Y);
+        } else {
             Coordinate intendedCoordinate = getIntendedCoordinate(n);
             return Math.abs(intendedCoordinate.X - currCoordinate.X) + Math.abs(intendedCoordinate.Y - currCoordinate.Y);
         }
     }
 
-    public int currentHeuristic(){
+    /**
+     * calculates the heuristic of the current board by calculating the moves required to get the number at each index into it's desired index
+     * @return
+     */
+    public int currentHeuristic() {
         int total = 0;
-        for(int i=0; i < Constants.dimX; i++){
-            for(int j=0; j< Constants.dimY; j++){
+        for (int i = 0; i < Constants.dimX; i++) {
+            for (int j = 0; j < Constants.dimY; j++) {
                 total += movesFromIntendedSlot(grid[i][j]);
             }
         }
         return total;
     }
-    public static int calculateHeuristic(int [][] aGrid){
-        int total = 0;
-        for(int i=0; i < Constants.dimX; i++){
-            for(int j=0; j< Constants.dimY; j++){
-                total += movesFromIntendedSlot(aGrid[i][j], i, j);
-            }
-        }
-        return total;
-    }
 
-    private static int movesFromIntendedSlot(int n, int i, int j){
-        if(n == 0){
-            return Math.abs((Constants.dimX -1) - i) + Math.abs((Constants.dimY -1) - j);
-        }
-        else {
-            Coordinate intendedCoordinate = getIntendedCoordinate(n);
-            return Math.abs(intendedCoordinate.X - i) + Math.abs(intendedCoordinate.Y - j);
-        }
-    }
-
-    public ArrayList<Board> getChildren(){
-        ArrayList<Board> children= new ArrayList<>();
+    /**
+     * returns an ArrayList of board objects containing potential children of the current board
+     * @return
+     */
+    public ArrayList<Board> getChildren() {
+        ArrayList<Board> children = new ArrayList<>();
         Coordinate posOfZero = mapFromIntegerToCoord.get(0);
 
-                if (posOfZero.X + 1 <= Constants.dimX - 1) {
-                    Board aBoard = new Board(this);
-                    aBoard.makeMove(grid[posOfZero.X+1][posOfZero.Y]);
-                    children.add(aBoard);
-                }
-                if (posOfZero.Y + 1 <= Constants.dimY - 1) {
-                    Board aBoard = new Board(this);
-                    aBoard.makeMove(grid[posOfZero.X][posOfZero.Y+1]);
-                    children.add(aBoard);
-                }
-                if (posOfZero.X - 1 >= 0) {
-                    Board aBoard = new Board(this);
-                    aBoard.makeMove(grid[posOfZero.X-1][posOfZero.Y]);
-                    children.add(aBoard);
-                }
-                if (posOfZero.Y - 1 >= 0) {
-                    Board aBoard = new Board(this);
-                    aBoard.makeMove(grid[posOfZero.X][posOfZero.Y-1]);
-                    children.add(aBoard);
-                }
-
-
+        if (posOfZero.X + 1 <= Constants.dimX - 1) {
+            Board aBoard = new Board(this);
+            aBoard.makeMove(grid[posOfZero.X + 1][posOfZero.Y]);
+            children.add(aBoard);
+        }
+        if (posOfZero.Y + 1 <= Constants.dimY - 1) {
+            Board aBoard = new Board(this);
+            aBoard.makeMove(grid[posOfZero.X][posOfZero.Y + 1]);
+            children.add(aBoard);
+        }
+        if (posOfZero.X - 1 >= 0) {
+            Board aBoard = new Board(this);
+            aBoard.makeMove(grid[posOfZero.X - 1][posOfZero.Y]);
+            children.add(aBoard);
+        }
+        if (posOfZero.Y - 1 >= 0) {
+            Board aBoard = new Board(this);
+            aBoard.makeMove(grid[posOfZero.X][posOfZero.Y - 1]);
+            children.add(aBoard);
+        }
         return children;
     }
 }
-class Coordinate{
-    int X;
-    int Y;
 
-    public Coordinate(int x, int y) {
-        X = x;
-        Y = y;
-    }
-}

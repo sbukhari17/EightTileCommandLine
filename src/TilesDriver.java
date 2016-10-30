@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -5,26 +6,24 @@ import java.util.Scanner;
  */
 public class TilesDriver {
     public static void main(String[] args) {
-
-        Board board = new Board(getUserInput());
-        //board.printBoard();
-        //System.out.println(board.isSolved());
-        //board.makeMove(6);
-        //board.printBoard();
-        //board.isSolved();
-        board.interactiveLoop();
+        try {
+            Board board = new Board(getUserInput());
+            board.interactiveLoop();
+        } catch(InputMismatchException e){ //if anything other than an integer is given
+            Constants.outputStream.println("Invalid input given.");
+        }
     }
-    public static int getUserInput(){
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Welcome to the 8-tiles puzzle.");
-        System.out.println("Place the tiles in ascending numerical order. For each");
-        System.out.println("move enter the piece to be moved into the blank square,");
-        System.out.println("or 0 to exit the program.\n\n");
-        System.out.println("Choose a game option:");
-        System.out.println("\t1. Start playing");
-        System.out.println("\t2. Set the starting configuration");
-        System.out.println("Enter your choice -->");
-        return scan.nextInt();
 
+    public static int getUserInput() {
+        Scanner scan = new Scanner(Constants.inputStream);
+        Constants.outputStream.println("Welcome to the 8-tiles puzzle.");
+        Constants.outputStream.println("Place the tiles in ascending numerical order. For each");
+        Constants.outputStream.println("move enter the piece to be moved into the blank square,");
+        Constants.outputStream.println("or 0 to exit the program.\n\n");
+        Constants.outputStream.println("Choose a game option:");
+        Constants.outputStream.println("\t1. Start playing");
+        Constants.outputStream.println("\t2. Set the starting configuration");
+        Constants.outputStream.println("Enter your choice -->");
+        return scan.nextInt();
     }
 }

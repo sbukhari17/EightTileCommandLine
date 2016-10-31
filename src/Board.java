@@ -252,7 +252,7 @@ public class Board {
                     Constants.outputStream.println(i + 2 + ".");
                     list.get(i).printBoard();
                 }
-                Constants.outputStream.println("\nDone");
+                Constants.outputStream.println("\nDone.");
             }
         }
 

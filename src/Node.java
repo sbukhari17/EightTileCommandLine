@@ -2,6 +2,14 @@
  * A node containing a board and its heuristic as well as the predecessor board leading to it. previousBoard will always be null for a root node.
  * Created by 1530B
  */
+
+
+/*
+ * Don't have default permissions on varibles
+ * Naming isn't good. If you have a constructor like Node a and b mean nothing. Something like prev would be better. Of course it doesn't matter much here but if things gro then it could get confusing.
+ */
+
+
 public class Node implements Comparable {
     Board board;
     int heuristic;

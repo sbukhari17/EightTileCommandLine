@@ -6,6 +6,20 @@
  * created by 1530b
  */
 
+/*
+ * Should not have magic numbers like 1 and 2 for choice. Those should be enums.
+ * You should not have an exit in here you should be throwing the exception up and catching it in your TilesDriver
+ * (Suggestion) -> Don't have isSolved inside the board class. A board should not care whether or not it is solved. Moving it to a new class like Game and have it take a board would make your code more reusable. That way if you do some other board game you only change the solution checker.
+ * InteractiveLoop() should not be in Board. Board shouldn't really have any user interaction. Probably should be in TilesDriver since that seems to be your user code.
+ * autoSolve should not be in Board. Again Board shouldn't care how it gets solved. 
+ * getIntendedCoordinate should not be here. I don't see it needing anything from a Board object.
+ * movesFromIntededSlot should not be here. The board should care about any type of hueristics. 
+ * currentHueristics should not be in Board. same as above.
+ * getChildren shoudl not be in Board. same as above only deals with solving.
+ *
+ * All of your code needs to be broken into more lines. Nesting three function calls into a single function call doesn't help any just makes things harder to read. 
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;

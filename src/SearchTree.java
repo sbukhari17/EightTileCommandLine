@@ -3,6 +3,14 @@
  * Created by 1530B
  */
 
+
+/*	
+ *	No reason to have boardQueue and oldBoards as public
+ *	Shouldn't really have default permissions on any variable like oldBoards unless you really know what you are doing with it
+ *
+ */
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

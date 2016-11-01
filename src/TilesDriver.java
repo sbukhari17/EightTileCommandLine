@@ -3,6 +3,13 @@
  * Created by 1530B
  */
 
+
+/*
+ *
+ * You are not really catching anything since you are not throwing anything in your program.
+ *
+ */
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
